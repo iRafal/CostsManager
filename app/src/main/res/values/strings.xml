@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Costs Manager</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_enter_data_screen">Costs</string>
+    <string name="title_statistics_screen">Statistics</string>
+    <string name="submit">Submit</string>
+    <string name="please_enter_price">Please enter price</string>
+    <string name="please_enter_category_name">Please enter category name</string>
 </resources>

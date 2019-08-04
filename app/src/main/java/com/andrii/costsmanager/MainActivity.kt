@@ -1,37 +1,35 @@
 package com.andrii.costsmanager
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var textMessage: TextView
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                textMessage.setText(R.string.title_home)
-                return@OnNavigationItemSelectedListener true
+        return@OnNavigationItemSelectedListener when (item.itemId) {
+            R.id.navigation_costs -> {
+                showFragment(CostsFragment.newInstance())
+                true
             }
-            R.id.navigation_dashboard -> {
-                textMessage.setText(R.string.title_dashboard)
-                return@OnNavigationItemSelectedListener true
+            R.id.navigation_statistics -> {
+                showFragment(StatisticsFragment.newInstance())
+                true
             }
-            R.id.navigation_notifications -> {
-                textMessage.setText(R.string.title_notifications)
-                return@OnNavigationItemSelectedListener true
-            }
+            else -> false
         }
-        false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        nav_view.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        nav_view.selectedItemId = R.id.navigation_costs
+    }
 
-        textMessage = findViewById(R.id.message)
-        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+    private fun showFragment(target: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.frag_container, target).commitAllowingStateLoss()
     }
 }

@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.0"
+    buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.andrii.costsmanager"
         minSdkVersion 22
@@ -61,12 +61,16 @@ dependencies {
 
     //RxBinding
     def rx_binding_version = '3.0.0'
+    implementation "com.jakewharton.rxbinding3:rxbinding:$rx_binding_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-core:$rx_binding_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-appcompat:$rx_binding_version"
-    implementation "com.jakewharton.rxbinding3:rxbinding-drawerlayout:$rx_binding_version"
-    implementation "com.jakewharton.rxbinding3:rxbinding-leanback:$rx_binding_version"
+//    implementation "com.jakewharton.rxbinding3:rxbinding-drawerlayout:$rx_binding_version"
+//    implementation "com.jakewharton.rxbinding3:rxbinding-leanback:$rx_binding_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-recyclerview:$rx_binding_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-slidingpanelayout:$rx_binding_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-swiperefreshlayout:$rx_binding_version"
     implementation "com.jakewharton.rxbinding3:rxbinding-viewpager:$rx_binding_version"
+
+    //Logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }

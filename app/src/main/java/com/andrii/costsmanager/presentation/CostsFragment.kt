@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_costs.category_price_edit_text
 import kotlinx.android.synthetic.main.fragment_costs.toolbar
 import timber.log.Timber
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -71,9 +72,10 @@ class CostsFragment : Fragment() {
             )
 
             add(
-                button_submit.clicks().subscribe {
-                    onSubmitClick()
-                }
+                button_submit
+                    .clicks()
+                    .throttleFirst(2, TimeUnit.SECONDS)
+                    .subscribe { onSubmitClick() }
             )
         }
     }

@@ -27,16 +27,21 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("CheckResult")
     fun saveCategory(category: CategoryModel): Completable {
-        return Completable.fromAction {
-            localRepository.insert(
-                Category(
-                    name = category.name,
-                    price = category.price,
-                    date = category.date
-                )
+        return localRepository.insert(
+            Category(
+                name = category.name,
+                price = category.price,
+                date = category.date
             )
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
+
+    fun getCategories() =
+        localRepository.getAll()
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
 
     override fun onCleared() {
         super.onCleared()

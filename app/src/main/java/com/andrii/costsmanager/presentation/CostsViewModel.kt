@@ -40,18 +40,22 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getCategories() =
         localRepository.getAll()
-            .map { list ->
-                list.map {
-                    CategoryModel(
-                        id = it.id,
-                        name = it.name,
-                        price = it.price,
-                        date = it.date
-                    )
-                }
-            }
+            .map { list -> list.map { it.map() } }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
+
+    fun getCategories(namePattern: String) =
+        localRepository.getAllByNamePattern(namePattern)
+            .map { list -> list.map { it.map() } }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+
+    private fun Category.map() = CategoryModel(
+        id = id,
+        name = name,
+        price = price,
+        date = date
+    )
 
     override fun onCleared() {
         super.onCleared()

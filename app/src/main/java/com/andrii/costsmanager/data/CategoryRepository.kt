@@ -10,6 +10,8 @@ import io.reactivex.Single
 interface CategoryRepository {
     fun getAll(): Single<List<Category>>
 
+    fun getAllByNamePattern(namePattern: String): Single<List<Category>>
+
     fun insert(category: Category): Completable
 
     fun deleteAll(): Completable

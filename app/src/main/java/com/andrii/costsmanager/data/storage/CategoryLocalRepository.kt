@@ -21,15 +21,28 @@ class CategoryLocalRepository(private val dao: CategoryDao) : CategoryRepository
         }
     }
 
-    override fun insert(category: Category): Completable =
-        dao.insert(
-            CategoryEntity(
-                name = category.name,
-                price = category.price,
-                date = category.date
-            )
+    override fun getAllByNamePattern(namePattern: String): Single<List<Category>> =
+        dao.getAllByNamePattern(namePattern).map { list ->
+            list.map { it.map() }
+        }
+
+    override fun insert(category: Category): Completable = dao.insert(category.map())
+
+    private fun Category.map() =
+        CategoryEntity(
+            id = id,
+            name = name,
+            price = price,
+            date = date
         )
 
+    private fun CategoryEntity.map() =
+        Category(
+            id = id,
+            name = name,
+            price = price,
+            date = date
+        )
 
     override fun deleteAll(): Completable = dao.deleteAll()
 }

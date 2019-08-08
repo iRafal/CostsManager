@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.andrii.costsmanager.R.layout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
-import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -85,15 +84,15 @@ class CostsFragment : Fragment() {
             )
 
             add(
-                autocomplete_category_name.textChangeEvents()
+                autocomplete_category_name.textChanges()
                     .debounce(500L, TimeUnit.MILLISECONDS)
                     .map { it.toString() }
                     .filter { it.length >= 2 }
                     .observeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .retry()
-                    .subscribe {
-                        viewModel.getCategories().subscribe { list ->
+                    .subscribe { text ->
+                        viewModel.getCategories("%$text%").subscribe { list ->
                             autocomplete_category_name.setAdapter(SearchAdapter(activity!!, list))
                         }
                     }

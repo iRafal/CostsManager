@@ -15,6 +15,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category_table")
     fun getAll(): Single<List<CategoryEntity>>
 
+    @Query("SELECT * FROM category_table WHERE name LIKE :namePattern")
+    fun getAllByNamePattern(namePattern: String): Single<List<CategoryEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(category: CategoryEntity): Completable
 

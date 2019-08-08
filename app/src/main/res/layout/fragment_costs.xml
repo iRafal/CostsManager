@@ -46,6 +46,11 @@
                         android:hint="@string/please_enter_category_name"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <AutoCompleteTextView
+                    android:id="@+id/autocomplete_category_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/category_price_input_layout"
                     android:layout_width="match_parent"

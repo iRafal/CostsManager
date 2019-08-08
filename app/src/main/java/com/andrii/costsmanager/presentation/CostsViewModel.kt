@@ -40,6 +40,16 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getCategories() =
         localRepository.getAll()
+            .map { list ->
+                list.map {
+                    CategoryModel(
+                        id = it.id,
+                        name = it.name,
+                        price = it.price,
+                        date = it.date
+                    )
+                }
+            }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
 

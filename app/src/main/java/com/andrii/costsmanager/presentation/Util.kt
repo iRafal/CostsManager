@@ -5,8 +5,7 @@ import android.content.Context
 import android.view.inputmethod.InputMethodManager
 
 
-
-/**
+/*
  * Created by Andrii Medvid on 8/10/2019.
  */
 

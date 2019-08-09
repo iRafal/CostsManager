@@ -1,9 +1,9 @@
 package com.andrii.costsmanager.data.storage
 
 import androidx.room.TypeConverter
-import java.util.Date
+import java.util.*
 
-object DateConverter {
+object TypeConverter {
     @TypeConverter
     @JvmStatic
     fun toDate(timestamp: Long?): Date? = if (timestamp == null) null else Date(timestamp)

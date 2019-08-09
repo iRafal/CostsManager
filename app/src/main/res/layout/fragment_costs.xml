@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:background="#BBBBBB">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,66 +14,53 @@
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+    <LinearLayout
+            android:id="@+id/linear_layout_input_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_margin="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:background="@android:color/white"
+            android:gravity="center">
 
-        <LinearLayout
-                android:id="@+id/linear_layout_input_container"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/category_name_input_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center">
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/category_name_input_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/category_name_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:imeOptions="actionNext"
-                        android:inputType="textAutoComplete"
-                        android:hint="@string/please_enter_category_name"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content">
 
             <AutoCompleteTextView
-                    android:id="@+id/autocomplete_category_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/category_price_input_layout"
+                    android:id="@+id/category_name_autocomplete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/please_enter_price"
-                    android:layout_marginTop="15dp">
-                <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/category_price_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:inputType="numberSigned"
-                        android:maxLines="1"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:maxLines="1"
+                    android:imeOptions="actionNext"
+                    android:inputType="textAutoComplete"
+                    android:hint="@string/please_enter_category_name"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                    android:id="@+id/button_submit"
-                    android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/category_price_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/please_enter_price"
+                android:layout_marginTop="15dp">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/category_price_edit_text"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/submit"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                    android:imeOptions="actionDone"
+                    android:inputType="numberSigned"
+                    android:maxLines="1"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+                android:id="@+id/button_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/submit"/>
+    </LinearLayout>
+
+</LinearLayout>

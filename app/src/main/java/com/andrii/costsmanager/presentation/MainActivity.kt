@@ -10,14 +10,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val firstFragment = CostsFragment.newInstance()
+    private val secondFragment = StatisticsFragment.newInstance()
+
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         return@OnNavigationItemSelectedListener when (item.itemId) {
             id.navigation_costs -> {
-                showFragment(CostsFragment.newInstance())
+                showFragment(firstFragment)
                 true
             }
             id.navigation_statistics -> {
-                showFragment(StatisticsFragment.newInstance())
+                showFragment(secondFragment)
                 true
             }
             else -> false

@@ -4,15 +4,15 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import java.util.Date
+import java.util.*
 
 /**
  * Created by Andrii Medvid on 8/4/2019.
  */
 @Entity(tableName = "category_table")
-@TypeConverters(DateConverter::class)
+@TypeConverters(TypeConverter::class)
 data class CategoryEntity(
-    @PrimaryKey val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "price") val price: Int,
     @ColumnInfo(name = "date") val date: Date)

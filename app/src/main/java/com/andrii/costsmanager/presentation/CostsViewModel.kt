@@ -1,6 +1,5 @@
 package com.andrii.costsmanager.presentation
 
-import android.annotation.SuppressLint
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.andrii.costsmanager.data.CategoryRepository
@@ -25,7 +24,6 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
         localRepository = CategoryLocalRepository(db.categoryDao())
     }
 
-    @SuppressLint("CheckResult")
     fun saveCategory(category: CategoryModel): Completable {
         return localRepository.insert(
             Category(
@@ -40,12 +38,6 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getCategories() =
         localRepository.getAll()
-            .map { list -> list.map { it.map() } }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-
-    fun getCategories(namePattern: String) =
-        localRepository.getAllByNamePattern(namePattern)
             .map { list -> list.map { it.map() } }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())

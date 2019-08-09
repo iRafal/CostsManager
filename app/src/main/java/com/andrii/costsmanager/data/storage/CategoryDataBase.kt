@@ -20,7 +20,10 @@ abstract class CategoryDataBase : RoomDatabase() {
                 context.applicationContext,
                 CategoryDataBase::class.java,
                 "Category_DataBase"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigrationOnDowngrade()
+                .build()
         }
     )
 }

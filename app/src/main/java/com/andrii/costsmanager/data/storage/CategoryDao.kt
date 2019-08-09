@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 /**
@@ -13,7 +14,7 @@ import io.reactivex.Single
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM category_table")
-    fun getAll(): Single<List<CategoryEntity>>
+    fun getAll(): Flowable<List<CategoryEntity>>
 
     @Query("SELECT * FROM category_table WHERE name LIKE :namePattern")
     fun getAllByNamePattern(namePattern: String): Single<List<CategoryEntity>>

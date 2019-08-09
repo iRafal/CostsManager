@@ -3,6 +3,7 @@ package com.andrii.costsmanager.data.storage
 import com.andrii.costsmanager.data.CategoryRepository
 import com.andrii.costsmanager.domain.model.Category
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 /**
@@ -10,7 +11,7 @@ import io.reactivex.Single
  */
 class CategoryLocalRepository(private val dao: CategoryDao) : CategoryRepository {
 
-    override fun getAll(): Single<List<Category>> = dao.getAll().map { list ->
+    override fun getAll(): Flowable<List<Category>> = dao.getAll().map { list ->
         list.map { item ->
             Category(
                 id = item.id,

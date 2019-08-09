@@ -12,11 +12,22 @@
             android:layout_height="match_parent"
             android:text="@string/no_costs_info_collected"
             android:gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:textAppearance="?android:textAppearanceLarge"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible"
             tools:listitem="@layout/list_item_section"/>
+
+    <ProgressBar
+            android:id="@+id/progress_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
 </FrameLayout>

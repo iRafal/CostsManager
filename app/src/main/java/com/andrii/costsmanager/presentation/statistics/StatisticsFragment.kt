@@ -5,14 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
 import com.andrii.costsmanager.presentation.CostsViewModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.fragment_statistics.progress_view
 import kotlinx.android.synthetic.main.fragment_statistics.recycler_view
+import kotlinx.android.synthetic.main.fragment_statistics.text_view_empty
 
 /**
  * Created by Andrii Medvid on 8/4/2019.
@@ -33,23 +34,22 @@ class StatisticsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListData()
-        viewModel.dataChanged.observe(
-            this,
-            Observer<Boolean> { if (it) setListData() }
-        )
     }
 
     private var listDataDisposable: Disposable? = null
 
     private fun setListData() {
+        showProgress()
         listDataDisposable?.let { if (it.isDisposed) it.dispose() }
-
         listDataDisposable = viewModel.getCategories().map { it.groupBy { item -> item.name } }.subscribe { map ->
-            sectionAdapter.removeAllSections()
+
+            hideProgress()
+
             if (map.isEmpty()) {
-                recycler_view.visibility = View.GONE
+                hideList()
             } else {
-                recycler_view.visibility = View.VISIBLE
+                showList()
+                sectionAdapter.removeAllSections()
                 map.forEach {
                     sectionAdapter.addSection(
                         ExpandableContactsSection(
@@ -64,6 +64,26 @@ class StatisticsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showProgress() {
+        progress_view.visibility = View.VISIBLE
+        recycler_view.visibility = View.GONE
+        text_view_empty.visibility = View.GONE
+    }
+
+    private fun hideProgress() {
+        progress_view.visibility = View.GONE
+    }
+
+    private fun showList() {
+        recycler_view.visibility = View.VISIBLE
+        text_view_empty.visibility = View.GONE
+    }
+
+    private fun hideList() {
+        recycler_view.visibility = View.GONE
+        text_view_empty.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {

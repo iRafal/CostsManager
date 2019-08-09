@@ -8,18 +8,20 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.andrii.costsmanager.R.layout
+import com.andrii.costsmanager.presentation.model.CategoryModel
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_costs.*
+import kotlinx.android.synthetic.main.fragment_costs.button_submit
+import kotlinx.android.synthetic.main.fragment_costs.category_name_autocomplete
+import kotlinx.android.synthetic.main.fragment_costs.category_price_edit_text
 import timber.log.Timber
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 
@@ -35,7 +37,7 @@ class CostsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CostsViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -43,7 +45,6 @@ class CostsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         initUi()
     }
 
@@ -65,6 +66,7 @@ class CostsFragment : Fragment() {
                 }
             )
 
+
             add(
                 category_price_edit_text.editorActions {
                     if (it == EditorInfo.IME_ACTION_DONE) {
@@ -79,7 +81,10 @@ class CostsFragment : Fragment() {
                 button_submit
                     .clicks()
                     .throttleFirst(2, TimeUnit.SECONDS)
-                    .subscribe { onSubmitClick() }
+                    .subscribe {
+                        onSubmitClick()
+                        activity?.hideKeyboard()
+                    }
             )
         }
     }
@@ -108,7 +113,9 @@ class CostsFragment : Fragment() {
     private fun updateAdapterData() {
         adapterUpdateDisposable?.checkAndDispose()
 
-        adapterUpdateDisposable = viewModel.getCategories().subscribe { list ->
+        adapterUpdateDisposable = viewModel.getCategories()
+            .map { it.map { item -> item.name }.distinct() }
+            .subscribe { list ->
             category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
         }
     }
@@ -124,8 +131,8 @@ class CostsFragment : Fragment() {
         if (!this.isDisposed) dispose()
     }
 
-    class SearchAdapter(activity: Activity, val data: List<CategoryModel>) :
-        ArrayAdapter<String>(activity, android.R.layout.select_dialog_item, data.map { it.name })
+    class SearchAdapter(activity: Activity, val data: List<String>) :
+        ArrayAdapter<String>(activity, android.R.layout.select_dialog_item, data)
 
     companion object {
         fun newInstance() = CostsFragment()

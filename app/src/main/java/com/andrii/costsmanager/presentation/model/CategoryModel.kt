@@ -1,4 +1,4 @@
-package com.andrii.costsmanager.presentation
+package com.andrii.costsmanager.presentation.model
 
 import java.util.Date
 

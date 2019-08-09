@@ -101,7 +101,7 @@ class CostsFragment : Fragment() {
             {
                 Toast.makeText(activity, "Category is Saved", Toast.LENGTH_SHORT).show()
                 Timber.d("Category is Saved")
-                updateAdapterData()
+//                updateAdapterData()
             },
             {
                 Toast.makeText(activity, "Category is NOT saved", Toast.LENGTH_SHORT).show()
@@ -115,8 +115,8 @@ class CostsFragment : Fragment() {
         adapterUpdateDisposable = viewModel.getCategories()
             .map { it.map { item -> item.name }.distinct() }
             .subscribe { list ->
-            category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
-        }
+                category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
+            }
     }
 
     override fun onDestroyView() {

@@ -101,7 +101,6 @@ class CostsFragment : Fragment() {
             {
                 Toast.makeText(activity, "Category is Saved", Toast.LENGTH_SHORT).show()
                 Timber.d("Category is Saved")
-//                updateAdapterData()
             },
             {
                 Toast.makeText(activity, "Category is NOT saved", Toast.LENGTH_SHORT).show()

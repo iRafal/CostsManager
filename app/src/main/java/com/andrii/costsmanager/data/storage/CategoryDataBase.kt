@@ -9,7 +9,7 @@ import com.andrii.costsmanager.util.SingletonHolder
 /**
  * Created by Andrii Medvid on 8/5/2019.
  */
-@Database(entities = [CategoryEntity::class], version = 1)
+@Database(entities = [CategoryEntity::class], version = 2)
 abstract class CategoryDataBase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao

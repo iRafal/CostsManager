@@ -22,7 +22,6 @@ abstract class CategoryDataBase : RoomDatabase() {
                 "Category_DataBase"
             )
                 .fallbackToDestructiveMigration()
-                .fallbackToDestructiveMigrationOnDowngrade()
                 .build()
         }
     )

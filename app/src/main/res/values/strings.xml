@@ -6,4 +6,5 @@
     <string name="please_enter_price">Please enter price</string>
     <string name="please_enter_category_name">Please enter category name</string>
     <string name="arrow_icon">Arrow icon</string>
+    <string name="no_costs_info_collected">No costs info collected</string>
 </resources>

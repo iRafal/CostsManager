@@ -2,6 +2,7 @@ package com.andrii.costsmanager.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.andrii.costsmanager.data.CategoryRepository
 import com.andrii.costsmanager.data.storage.CategoryDataBase
 import com.andrii.costsmanager.data.storage.CategoryLocalRepository
@@ -20,6 +21,8 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val localRepository: CategoryRepository
     private val disposable = CompositeDisposable()
+
+    val dataChanged = MutableLiveData<Boolean>()
 
     init {
         val db = CategoryDataBase.getInstance(application)

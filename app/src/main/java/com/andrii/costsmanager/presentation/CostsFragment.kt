@@ -66,7 +66,6 @@ class CostsFragment : Fragment() {
                 }
             )
 
-
             add(
                 category_price_edit_text.editorActions {
                     if (it == EditorInfo.IME_ACTION_DONE) {
@@ -103,6 +102,7 @@ class CostsFragment : Fragment() {
                 Toast.makeText(activity, "Category is Saved", Toast.LENGTH_SHORT).show()
                 Timber.d("Category is Saved")
                 updateAdapterData()
+                viewModel.dataChanged.value = true
             },
             {
                 Toast.makeText(activity, "Category is NOT saved", Toast.LENGTH_SHORT).show()

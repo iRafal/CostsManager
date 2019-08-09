@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
@@ -29,6 +30,15 @@ class StatisticsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_statistics, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListData()
+        viewModel.dataChanged.observe(
+            this,
+            Observer<Boolean> { if (it) setListData() }
+        )
+    }
+
     private var listDataDisposable: Disposable? = null
 
     private fun setListData() {
@@ -36,24 +46,24 @@ class StatisticsFragment : Fragment() {
 
         listDataDisposable = viewModel.getCategories().map { it.groupBy { item -> item.name } }.subscribe { map ->
             sectionAdapter.removeAllSections()
-            map.forEach {
-                sectionAdapter.addSection(
-                    ExpandableContactsSection(
-                        title = it.key,
-                        list = it.value,
-                        onItemClick = { sectionAdapter.notifyDataSetChanged() },
-                        expanded = true
+            if (map.isEmpty()) {
+                recycler_view.visibility = View.GONE
+            } else {
+                recycler_view.visibility = View.VISIBLE
+                map.forEach {
+                    sectionAdapter.addSection(
+                        ExpandableContactsSection(
+                            title = it.key,
+                            list = it.value,
+                            onItemClick = { sectionAdapter.notifyDataSetChanged() },
+                            expanded = true
+                        )
                     )
-                )
-                recycler_view.layoutManager = LinearLayoutManager(activity)
-                recycler_view.adapter = sectionAdapter
+                    recycler_view.layoutManager = LinearLayoutManager(activity)
+                    recycler_view.adapter = sectionAdapter
+                }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setListData()
     }
 
     override fun onDestroyView() {

@@ -34,7 +34,7 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
                 date = category.date
             )
         )
-            .subscribeOn(Schedulers.computation())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 

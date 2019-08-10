@@ -34,14 +34,13 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
                 date = category.date
             )
         )
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getCategories(): Flowable<List<CategoryModel>> =
         localRepository.getAll()
             .map { list -> list.map { it.map() } }
-            .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
 
     private fun Category.map() = CategoryModel(

@@ -1,15 +1,15 @@
 package com.andrii.costsmanager.presentation
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class ViewPagerAdapter(
-    fragmentManager: FragmentManager,
+    activity: FragmentActivity,
     private val fragments: List<Fragment>
-) : FragmentStateAdapter(fragmentManager) {
+) : FragmentStateAdapter(activity) {
 
-    override fun getItem(position: Int): Fragment = fragments[position]
+    override fun createFragment(position: Int): Fragment = fragments[position]
 
     override fun getItemCount(): Int = fragments.size
 }

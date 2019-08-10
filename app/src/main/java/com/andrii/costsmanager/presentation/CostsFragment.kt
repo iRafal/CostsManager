@@ -30,8 +30,7 @@ import java.util.concurrent.TimeUnit
  */
 class CostsFragment : Fragment() {
 
-    private val viewsDisposable = CompositeDisposable()
-    private var adapterUpdateDisposable: Disposable? = null
+    private val compositeDisposable = CompositeDisposable()
     private var onSubmitDataFetchDisposable: Disposable? = null
     private lateinit var viewModel: CostsViewModel
 
@@ -51,7 +50,7 @@ class CostsFragment : Fragment() {
     private fun initUi() {
         updateAdapterData()
 
-        viewsDisposable.apply {
+        compositeDisposable.apply {
             add(
                 category_name_autocomplete.textChanges().map { it.toString() }.subscribe { text ->
                     button_submit.isEnabled = text.isNotEmpty() && category_price_edit_text.text?.isNotEmpty() == true
@@ -89,8 +88,6 @@ class CostsFragment : Fragment() {
     }
 
     private fun onSubmitClick() {
-        onSubmitDataFetchDisposable?.checkAndDispose()
-
         onSubmitDataFetchDisposable = viewModel.saveCategory(
             CategoryModel(
                 name = category_name_autocomplete.text.toString(),
@@ -101,32 +98,28 @@ class CostsFragment : Fragment() {
             {
                 Toast.makeText(activity, "Category is Saved", Toast.LENGTH_SHORT).show()
                 Timber.d("Category is Saved")
+                onSubmitDataFetchDisposable?.dispose()
             },
             {
                 Toast.makeText(activity, "Category is NOT saved", Toast.LENGTH_SHORT).show()
                 Timber.e(it, "Category is NOT saved")
+                onSubmitDataFetchDisposable?.dispose()
             })
     }
 
     private fun updateAdapterData() {
-        adapterUpdateDisposable?.checkAndDispose()
-
-        adapterUpdateDisposable = viewModel.getCategories()
-            .map { it.map { item -> item.name }.distinct() }
-            .subscribe { list ->
-                category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
-            }
+        compositeDisposable.add(
+            viewModel.getCategories()
+                .map { it.map { item -> item.name }.distinct() }
+                .subscribe { list ->
+                    category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
+                }
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewsDisposable.dispose()
-        adapterUpdateDisposable?.checkAndDispose()
-        onSubmitDataFetchDisposable?.checkAndDispose()
-    }
-
-    private fun Disposable.checkAndDispose() {
-        if (!this.isDisposed) dispose()
+        compositeDisposable.dispose()
     }
 
     class SearchAdapter(activity: Activity, val data: List<String>) :

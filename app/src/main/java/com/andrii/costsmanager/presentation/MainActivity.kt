@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         view_pager.adapter = ViewPagerAdapter(
-            supportFragmentManager,
+            this,
             listOf(CostsFragment.newInstance(), StatisticsFragment.newInstance())
         )
         view_pager.registerOnPageChangeCallback(onPageChangeCallback)

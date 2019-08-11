@@ -1,10 +1,10 @@
 package com.andrii.costsmanager.data.storage
 
 import com.andrii.costsmanager.data.CategoryRepository
+import com.andrii.costsmanager.data.storage.dao.CategoryDao
 import com.andrii.costsmanager.domain.model.Category
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 /**
  * Created by Andrii Medvid on 8/8/2019.
@@ -22,10 +22,7 @@ class CategoryLocalRepository(private val dao: CategoryDao) : CategoryRepository
         }
     }
 
-    override fun getAllByNamePattern(namePattern: String): Single<List<Category>> =
-        dao.getAllByNamePattern(namePattern).map { list -> list.map { it.map() } }
-
-    override fun insert(category: Category): Completable = dao.insert(category.map())
+    override fun insertOrReplace(category: Category): Completable = dao.insertOrReplace(category.map())
 
     private fun Category.map() =
         CategoryEntity(

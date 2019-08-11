@@ -12,6 +12,7 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 /**
  * Created by Andrii Medvid on 8/8/2019.
@@ -27,7 +28,7 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun saveCategory(category: CategoryModel): Completable {
-        return localRepository.insert(
+        return localRepository.insertOrReplace(
             Category(
                 name = category.name,
                 price = category.price,
@@ -36,12 +37,14 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
         )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { Timber.e(it) }
     }
 
     fun getCategories(): Flowable<List<CategoryModel>> =
         localRepository.getAll()
             .map { list -> list.map { it.map() } }
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { Timber.e(it) }
 
     private fun Category.map() = CategoryModel(
         id = id,

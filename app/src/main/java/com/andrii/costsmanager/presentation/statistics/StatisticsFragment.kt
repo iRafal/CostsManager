@@ -33,6 +33,12 @@ class StatisticsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(activity)
+            adapter = sectionAdapter
+        }
+
         setListData()
     }
 
@@ -59,8 +65,6 @@ class StatisticsFragment : Fragment() {
                             expanded = true
                         )
                     )
-                    recycler_view.layoutManager = LinearLayoutManager(activity)
-                    recycler_view.adapter = sectionAdapter
                 }
             }
         }

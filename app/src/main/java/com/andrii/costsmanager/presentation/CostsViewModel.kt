@@ -46,12 +46,7 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { Timber.e(it) }
 
-    private fun Category.map() = CategoryModel(
-        id = id,
-        name = name,
-        price = price,
-        date = date
-    )
+    private fun Category.map() = CategoryModel(id = id, name = name, price = price, date = date)
 
     override fun onCleared() {
         super.onCleared()

@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProviders
 import com.andrii.costsmanager.R.layout
 import com.andrii.costsmanager.presentation.model.CategoryModel
@@ -17,11 +18,9 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_costs.button_submit
-import kotlinx.android.synthetic.main.fragment_costs.category_name_autocomplete
-import kotlinx.android.synthetic.main.fragment_costs.category_price_edit_text
+import kotlinx.android.synthetic.main.fragment_costs.*
 import timber.log.Timber
-import java.util.Date
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -108,13 +107,11 @@ class CostsFragment : Fragment() {
     }
 
     private fun updateAdapterData() {
-        compositeDisposable.add(
-            viewModel.getCategories()
-                .map { it.map { item -> item.name }.distinct() }
-                .subscribe { list ->
-                    category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
-                }
-        )
+        Transformations.map(viewModel.getCategories()) { list ->
+            list.map { item -> item.name }.distinct()
+        }.observe(this, androidx.lifecycle.Observer { list ->
+            category_name_autocomplete.setAdapter(SearchAdapter(activity!!, list))
+        })
     }
 
     override fun onDestroyView() {

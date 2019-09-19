@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
 import com.andrii.costsmanager.presentation.CostsViewModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_statistics.progress_view
-import kotlinx.android.synthetic.main.fragment_statistics.recycler_view
-import kotlinx.android.synthetic.main.fragment_statistics.text_view_empty
+import kotlinx.android.synthetic.main.fragment_statistics.*
 
 /**
  * Created by Andrii Medvid on 8/4/2019.
@@ -46,28 +46,31 @@ class StatisticsFragment : Fragment() {
 
     private fun setListData() {
         showProgress()
-        listDataDisposable?.let { if (it.isDisposed) it.dispose() }
-        listDataDisposable = viewModel.getCategories().map { it.groupBy { item -> item.name } }.subscribe { map ->
 
-            hideProgress()
-
-            if (map.isEmpty()) {
-                hideList()
-            } else {
-                showList()
-                sectionAdapter.removeAllSections()
-                map.forEach {
-                    sectionAdapter.addSection(
-                        ExpandableContactsSection(
-                            title = it.key,
-                            list = it.value,
-                            onItemClick = { sectionAdapter.notifyDataSetChanged() },
-                            expanded = true
+        Transformations.map(viewModel.getCategories()) { list ->
+            list.groupBy { item -> item.name }
+        }.observe(
+            this,
+            Observer { map ->
+                hideProgress()
+                if (map.isEmpty()) {
+                    hideList()
+                } else {
+                    showList()
+                    sectionAdapter.removeAllSections()
+                    map.forEach {
+                        sectionAdapter.addSection(
+                            ExpandableContactsSection(
+                                title = it.key,
+                                list = it.value,
+                                onItemClick = { sectionAdapter.notifyDataSetChanged() },
+                                expanded = true
+                            )
                         )
-                    )
+                    }
                 }
             }
-        }
+        )
     }
 
     private fun showProgress() {

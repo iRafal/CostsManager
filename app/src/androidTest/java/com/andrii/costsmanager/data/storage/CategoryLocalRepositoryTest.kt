@@ -1,13 +1,18 @@
 package com.andrii.costsmanager.data.storage
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.andrii.costsmanager.domain.model.Category
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
+import com.andrii.costsmanager.util.TestLifecycleOwner
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 
 /**
@@ -15,6 +20,9 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class CategoryLocalRepositoryTest {
+
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
     private lateinit var db: CategoryDataBase
     private lateinit var repository: CategoryLocalRepository
@@ -33,15 +41,18 @@ class CategoryLocalRepositoryTest {
     fun insertAndGetCategory() {
         repository.insertOrReplace(input)
 
-        repository.getAll().subscribe { list ->
-            val actual = list.firstOrNull()
-            assertNotNull(actual)
-            actual?.let {
-                assertEquals(it.name, input.name)
-                assertEquals(it.price, input.price)
-                assertEquals(it.date, input.date)
+        repository.getAll().observe(
+            TestLifecycleOwner(),
+            Observer { list ->
+                val actual = list.firstOrNull()
+                assertNotNull(actual)
+                actual?.let {
+                    assertEquals(it.name, input.name)
+                    assertEquals(it.price, input.price)
+                    assertEquals(it.date, input.date)
+                }
             }
-        }
+        )
     }
 
     @Test
@@ -51,7 +62,7 @@ class CategoryLocalRepositoryTest {
         val updatedInput = input.copy(name = "Category_1_New", price = 200)
         repository.insertOrReplace(updatedInput)
 
-        repository.getAll().subscribe { list ->
+        repository.getAll().observe(TestLifecycleOwner(), Observer { list ->
             val actual = list.firstOrNull()
             assertNotNull(actual)
             actual?.let {
@@ -59,13 +70,13 @@ class CategoryLocalRepositoryTest {
                 assertEquals(it.price, updatedInput.price)
                 assertEquals(it.date, input.date)
             }
-        }
+        })
     }
 
     @Test
     fun deleteAndGetCategory() {
         repository.insertOrReplace(input)
         repository.deleteAll()
-        repository.getAll().subscribe { list -> assertNotNull(list) }
+        repository.getAll().observe(TestLifecycleOwner(), Observer { list -> assertNotNull(list) })
     }
 }

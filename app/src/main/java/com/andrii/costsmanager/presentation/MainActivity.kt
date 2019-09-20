@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.andrii.costsmanager.R
+import com.andrii.costsmanager.presentation.costs.CostsFragment
 import com.andrii.costsmanager.presentation.statistics.StatisticsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.nav_view

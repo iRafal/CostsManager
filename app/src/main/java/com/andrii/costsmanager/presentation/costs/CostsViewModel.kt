@@ -1,4 +1,4 @@
-package com.andrii.costsmanager.presentation
+package com.andrii.costsmanager.presentation.costs
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

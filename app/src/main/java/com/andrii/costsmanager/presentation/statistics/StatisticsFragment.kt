@@ -6,30 +6,37 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
-import com.andrii.costsmanager.presentation.CostsViewModel
+import com.andrii.costsmanager.presentation.costs.CostsViewModel
+import com.andrii.costsmanager.presentation.model.CategoryModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
-import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fragment_statistics.*
+import kotlinx.android.synthetic.main.fragment_statistics.progress_view
+import kotlinx.android.synthetic.main.fragment_statistics.recycler_view
+import kotlinx.android.synthetic.main.fragment_statistics.text_view_empty
 
 /**
  * Created by Andrii Medvid on 8/4/2019.
  */
-class StatisticsFragment : Fragment() {
+class StatisticsFragment : Fragment(), StatisticsContract.View {
 
     private lateinit var viewModel: CostsViewModel
+    private lateinit var presenter: StatisticsContract.Presenter
+
     private val sectionAdapter = SectionedRecyclerViewAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(CostsViewModel::class.java)
+        presenter = StatisticsPresenter(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_statistics, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_statistics, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,63 +46,49 @@ class StatisticsFragment : Fragment() {
             adapter = sectionAdapter
         }
 
-        setListData()
+        presenter.onCreate()
     }
 
-    private var listDataDisposable: Disposable? = null
+    override fun showCategories(map: Map<String, List<CategoryModel>>) {
+        sectionAdapter.removeAllSections()
 
-    private fun setListData() {
-        showProgress()
+        map.forEach {
+            sectionAdapter.addSection(
+                ExpandableContactsSection(
+                    title = it.key,
+                    list = it.value,
+                    onItemClick = { sectionAdapter.notifyDataSetChanged() },
+                    expanded = true
+                )
+            )
+        }
+    }
 
-        Transformations.map(viewModel.getCategories()) { list ->
-            list.groupBy { item -> item.name }
-        }.observe(
+    override fun loadCategories(loadListener: (List<CategoryModel>) -> Unit) {
+        viewModel.getCategories().observe(
             this,
-            Observer { map ->
-                hideProgress()
-                if (map.isEmpty()) {
-                    hideList()
-                } else {
-                    showList()
-                    sectionAdapter.removeAllSections()
-                    map.forEach {
-                        sectionAdapter.addSection(
-                            ExpandableContactsSection(
-                                title = it.key,
-                                list = it.value,
-                                onItemClick = { sectionAdapter.notifyDataSetChanged() },
-                                expanded = true
-                            )
-                        )
-                    }
-                }
-            }
+            Observer { categories -> loadListener(categories) }
         )
     }
 
-    private fun showProgress() {
+    override fun showProgress() {
         progress_view.visibility = View.VISIBLE
         recycler_view.visibility = View.GONE
         text_view_empty.visibility = View.GONE
     }
 
-    private fun hideProgress() {
+    override fun hideProgress() {
         progress_view.visibility = View.GONE
     }
 
-    private fun showList() {
+    override fun showList() {
         recycler_view.visibility = View.VISIBLE
         text_view_empty.visibility = View.GONE
     }
 
-    private fun hideList() {
+    override fun hideList() {
         recycler_view.visibility = View.GONE
         text_view_empty.visibility = View.VISIBLE
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        listDataDisposable?.let { if (it.isDisposed) it.dispose() }
     }
 
     companion object {

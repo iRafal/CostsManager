@@ -8,10 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.andrii.costsmanager.R.layout
-import com.andrii.costsmanager.data.storage.CategoryDataBase
-import com.andrii.costsmanager.data.storage.CategoryLocalRepository
 import com.andrii.costsmanager.presentation.model.CategoryModel
-import com.andrii.costsmanager.presentation.util.getViewModel
 import com.andrii.costsmanager.presentation.util.hideKeyboard
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -20,6 +17,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_costs.button_submit
 import kotlinx.android.synthetic.main.fragment_costs.category_name_autocomplete
 import kotlinx.android.synthetic.main.fragment_costs.category_price_edit_text
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.LazyThreadSafetyMode.NONE
@@ -32,11 +30,7 @@ class CostsFragment : Fragment(), CostsContract.View {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val viewModel: CostsViewModel by lazy(mode = NONE) {
-        val db = CategoryDataBase.getInstance(context!!)
-        val localRepository = CategoryLocalRepository(db.categoryDao())
-        activity!!.getViewModel { CostsViewModelImpl(localRepository) }
-    }
+    private val viewModel: CostsViewModel by sharedViewModel()
 
     private val presenter: CostsContract.Presenter by lazy(mode = NONE) { CostsPresenter(this) }
 

@@ -8,16 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
-import com.andrii.costsmanager.data.storage.CategoryDataBase
-import com.andrii.costsmanager.data.storage.CategoryLocalRepository
 import com.andrii.costsmanager.presentation.costs.CostsViewModel
-import com.andrii.costsmanager.presentation.costs.CostsViewModelImpl
 import com.andrii.costsmanager.presentation.model.CategoryModel
-import com.andrii.costsmanager.presentation.util.getViewModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_statistics.progress_view
 import kotlinx.android.synthetic.main.fragment_statistics.recycler_view
 import kotlinx.android.synthetic.main.fragment_statistics.text_view_empty
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
@@ -25,11 +22,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  */
 class StatisticsFragment : Fragment(), StatisticsContract.View {
 
-    private val viewModel: CostsViewModel by lazy(mode = NONE) {
-        val db = CategoryDataBase.getInstance(context!!)
-        val localRepository = CategoryLocalRepository(db.categoryDao())
-        activity!!.getViewModel { CostsViewModelImpl(localRepository) }
-    }
+    private val viewModel: CostsViewModel by sharedViewModel()
 
     private val presenter: StatisticsContract.Presenter by lazy(mode = NONE) {
         StatisticsPresenter(

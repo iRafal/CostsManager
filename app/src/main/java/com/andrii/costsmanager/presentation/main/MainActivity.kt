@@ -5,13 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.andrii.costsmanager.R
 import com.andrii.costsmanager.presentation.costs.CostsFragment
+import com.andrii.costsmanager.presentation.costs.CostsViewModel
 import com.andrii.costsmanager.presentation.statistics.StatisticsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.nav_view
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.activity_main.view_pager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: CostsViewModel by viewModel()
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         return@OnNavigationItemSelectedListener when (item.itemId) {

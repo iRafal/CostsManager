@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
 import com.andrii.costsmanager.presentation.costs.CostsViewModel
+import com.andrii.costsmanager.presentation.costs.CostsViewModelImpl
 import com.andrii.costsmanager.presentation.model.CategoryModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_statistics.progress_view
@@ -28,7 +29,7 @@ class StatisticsFragment : Fragment(), StatisticsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModelImpl::class.java)
         presenter = StatisticsPresenter(this)
     }
 

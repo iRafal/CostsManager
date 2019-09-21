@@ -40,7 +40,7 @@ class CostsFragment : Fragment(), CostsContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModelImpl::class.java)
         presenter = CostsPresenter(this)
     }
 

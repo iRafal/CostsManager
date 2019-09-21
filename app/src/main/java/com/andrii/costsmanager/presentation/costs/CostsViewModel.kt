@@ -17,7 +17,7 @@ import timber.log.Timber
 /**
  * Created by Andrii Medvid on 8/8/2019.
  */
-class CostsViewModel(application: Application) : AndroidViewModel(application) {
+class CostsViewModelImpl(application: Application) : CostsViewModel(application) {
 
     private val localRepository: CategoryRepository
 
@@ -26,7 +26,7 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
         localRepository = CategoryLocalRepository(db.categoryDao())
     }
 
-    fun saveCategory(category: CategoryModel): Completable {
+    override fun saveCategory(category: CategoryModel): Completable {
         return localRepository.insertOrReplace(
             Category(
                 name = category.name,
@@ -39,8 +39,13 @@ class CostsViewModel(application: Application) : AndroidViewModel(application) {
             .doOnError { Timber.e(it) }
     }
 
-    fun getCategories(): LiveData<List<CategoryModel>> =
+    override fun getCategories(): LiveData<List<CategoryModel>> =
         Transformations.map(localRepository.getAll()) { categories -> categories.map { it.map() } }
 
     private fun Category.map() = CategoryModel(id = id, name = name, price = price, date = date)
+}
+
+abstract class CostsViewModel(application: Application) : AndroidViewModel(application) {
+    abstract fun saveCategory(category: CategoryModel): Completable
+    abstract fun getCategories(): LiveData<List<CategoryModel>>
 }

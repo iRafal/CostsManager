@@ -25,9 +25,7 @@ class StatisticsFragment : Fragment(), StatisticsContract.View {
     private val viewModel: CostsViewModel by sharedViewModel()
 
     private val presenter: StatisticsContract.Presenter by lazy(mode = NONE) {
-        StatisticsPresenter(
-            this
-        )
+        StatisticsPresenter(this)
     }
     private val sectionAdapter = SectionedRecyclerViewAdapter()
 

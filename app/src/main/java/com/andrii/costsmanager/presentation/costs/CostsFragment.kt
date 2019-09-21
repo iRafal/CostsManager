@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.andrii.costsmanager.R.layout
-import com.andrii.costsmanager.presentation.hideKeyboard
+import com.andrii.costsmanager.data.storage.CategoryDataBase
+import com.andrii.costsmanager.data.storage.CategoryLocalRepository
 import com.andrii.costsmanager.presentation.model.CategoryModel
+import com.andrii.costsmanager.presentation.util.getViewModel
+import com.andrii.costsmanager.presentation.util.hideKeyboard
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -20,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_costs.category_name_autocomplete
 import kotlinx.android.synthetic.main.fragment_costs.category_price_edit_text
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import kotlin.LazyThreadSafetyMode.NONE
 
 
 /**
@@ -29,8 +32,13 @@ class CostsFragment : Fragment(), CostsContract.View {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private lateinit var viewModel: CostsViewModel
-    private lateinit var presenter: CostsContract.Presenter
+    private val viewModel: CostsViewModel by lazy(mode = NONE) {
+        val db = CategoryDataBase.getInstance(context!!)
+        val localRepository = CategoryLocalRepository(db.categoryDao())
+        activity!!.getViewModel { CostsViewModelImpl(localRepository) }
+    }
+
+    private val presenter: CostsContract.Presenter by lazy(mode = NONE) { CostsPresenter(this) }
 
     override val categoryName: String
         get() = category_name_autocomplete.text?.toString() ?: ""
@@ -38,18 +46,11 @@ class CostsFragment : Fragment(), CostsContract.View {
     override val categoryPriceAsString: String
         get() = category_price_edit_text.text?.toString() ?: ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModelImpl::class.java)
-        presenter = CostsPresenter(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(layout.fragment_costs, container, false)
+    ): View? = inflater.inflate(layout.fragment_costs, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

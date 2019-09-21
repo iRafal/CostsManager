@@ -1,4 +1,4 @@
-package com.andrii.costsmanager.presentation
+package com.andrii.costsmanager.presentation.main
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

@@ -1,4 +1,4 @@
-package com.andrii.costsmanager.presentation
+package com.andrii.costsmanager.presentation.util
 
 import android.app.Activity
 import android.content.Context

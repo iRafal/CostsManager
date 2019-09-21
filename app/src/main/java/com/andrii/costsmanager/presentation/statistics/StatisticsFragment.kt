@@ -6,32 +6,37 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrii.costsmanager.R
+import com.andrii.costsmanager.data.storage.CategoryDataBase
+import com.andrii.costsmanager.data.storage.CategoryLocalRepository
 import com.andrii.costsmanager.presentation.costs.CostsViewModel
 import com.andrii.costsmanager.presentation.costs.CostsViewModelImpl
 import com.andrii.costsmanager.presentation.model.CategoryModel
+import com.andrii.costsmanager.presentation.util.getViewModel
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_statistics.progress_view
 import kotlinx.android.synthetic.main.fragment_statistics.recycler_view
 import kotlinx.android.synthetic.main.fragment_statistics.text_view_empty
+import kotlin.LazyThreadSafetyMode.NONE
 
 /**
  * Created by Andrii Medvid on 8/4/2019.
  */
 class StatisticsFragment : Fragment(), StatisticsContract.View {
 
-    private lateinit var viewModel: CostsViewModel
-    private lateinit var presenter: StatisticsContract.Presenter
-
-    private val sectionAdapter = SectionedRecyclerViewAdapter()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(CostsViewModelImpl::class.java)
-        presenter = StatisticsPresenter(this)
+    private val viewModel: CostsViewModel by lazy(mode = NONE) {
+        val db = CategoryDataBase.getInstance(context!!)
+        val localRepository = CategoryLocalRepository(db.categoryDao())
+        activity!!.getViewModel { CostsViewModelImpl(localRepository) }
     }
+
+    private val presenter: StatisticsContract.Presenter by lazy(mode = NONE) {
+        StatisticsPresenter(
+            this
+        )
+    }
+    private val sectionAdapter = SectionedRecyclerViewAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,

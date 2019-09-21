@@ -1,4 +1,4 @@
-package com.andrii.costsmanager.presentation
+package com.andrii.costsmanager.presentation.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

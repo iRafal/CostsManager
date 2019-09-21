@@ -1,12 +1,9 @@
 package com.andrii.costsmanager.presentation.costs
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.andrii.costsmanager.data.CategoryRepository
-import com.andrii.costsmanager.data.storage.CategoryDataBase
-import com.andrii.costsmanager.data.storage.CategoryLocalRepository
 import com.andrii.costsmanager.domain.model.Category
 import com.andrii.costsmanager.presentation.model.CategoryModel
 import io.reactivex.Completable
@@ -17,14 +14,7 @@ import timber.log.Timber
 /**
  * Created by Andrii Medvid on 8/8/2019.
  */
-class CostsViewModelImpl(application: Application) : CostsViewModel(application) {
-
-    private val localRepository: CategoryRepository
-
-    init {
-        val db = CategoryDataBase.getInstance(application)
-        localRepository = CategoryLocalRepository(db.categoryDao())
-    }
+class CostsViewModelImpl(localRepository: CategoryRepository) : CostsViewModel(localRepository) {
 
     override fun saveCategory(category: CategoryModel): Completable {
         return localRepository.insertOrReplace(
@@ -45,7 +35,7 @@ class CostsViewModelImpl(application: Application) : CostsViewModel(application)
     private fun Category.map() = CategoryModel(id = id, name = name, price = price, date = date)
 }
 
-abstract class CostsViewModel(application: Application) : AndroidViewModel(application) {
+abstract class CostsViewModel(protected val localRepository: CategoryRepository) : ViewModel() {
     abstract fun saveCategory(category: CategoryModel): Completable
     abstract fun getCategories(): LiveData<List<CategoryModel>>
 }
